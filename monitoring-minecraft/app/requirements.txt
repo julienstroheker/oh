@@ -1,0 +1,2 @@
+prometheus_client==0.0.19
+mcrcon==0.5.2

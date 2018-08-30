@@ -1,0 +1,49 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: openhack-challenge2-deploy
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: openhack-challenge2
+    spec:
+      containers:
+      - name: openhack-challeng2
+        image: openhack/minecraft-server:2.0
+        volumeMounts:
+          - name: azure-config
+            mountPath: /data/config
+        env:
+        - name: EULA
+          value: "TRUE"
+        - name: MOTD
+          value: "Hello from Julien's AKS Cluster"
+        - name: VERSION 
+          value: "1.12"
+        ports:
+        - containerPort: 25565
+          name: minecraft
+        - containerPort: 25575
+          name: rcon
+      volumes:
+        - name: azure-config
+          azureFile:
+            secretName: azure-secret
+            shareName: config
+            readOnly: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openhack-challeng2-svc
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 25565
+    name: minecraft
+  - port: 25575
+    name: rcon
+  selector:
+    app: openhack-challenge2

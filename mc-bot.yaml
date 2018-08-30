@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mc-bot
+  labels:
+    app: mc-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mc-bot
+  template:
+    metadata:
+      labels:
+        app: mc-bot
+    spec:
+      containers:
+      - name: mc-bot
+        image: julienstroheker/mc-bot
+        imagePullPolicy: Always
+        env:
+        - name: MC_HOST
+          value: "23.96.34.152"
+        - name: MC_PORT
+          value: "25565"
